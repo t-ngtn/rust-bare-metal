@@ -5,27 +5,26 @@
 #![reexport_test_harness_main = "test_main"]
 
 use core::panic::PanicInfo;
-use rust_bare_metal::println;
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
-    println!("Hello World{}", "!");
-
-    #[cfg(test)]
     test_main();
 
     loop {}
 }
 
-#[cfg(not(test))]
+fn test_runner(tests: &[&dyn Fn()]) {
+    unimplemented!();
+}
+
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    println!("{}", info);
     loop {}
 }
 
-#[cfg(test)]
-#[panic_handler]
-fn panic(info: &PanicInfo) -> ! {
-    rust_bare_metal::test_panic_handler(info)
+use rust_bare_metal::println;
+
+#[test_case]
+fn test_println() {
+    println!("test_println output");
 }
