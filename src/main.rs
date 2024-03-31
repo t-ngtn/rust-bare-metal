@@ -11,9 +11,18 @@ use rust_bare_metal::println;
 pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
 
+    rust_bare_metal::init();
+
+    fn stack_overflow() {
+        stack_overflow(); // 再帰呼び出しのために、リターンアドレスがプッシュされる
+    }
+
+    stack_overflow();
+
     #[cfg(test)]
     test_main();
 
+    println!("It did not crash!");
     loop {}
 }
 
